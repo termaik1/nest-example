@@ -1,37 +1,23 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TodosModule } from './todos/todos.module';
+import { Module } from '@nestjs/common';
 
-import { resolve } from 'path';
+import { UserController } from './user/user.controller';
+import { UserService } from './user/user.service';
+
+import { DatabaseConnectionService } from './database';
+
+import { OrderModule } from './order/order.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: '127.0.0.1',
-      port: 5432,
-      username: 'postgres',
-      password: 'password',
-      database: 'postgres',
-      entities: [resolve(__dirname, './**/*.entity.js')],
-      migrations: [resolve(__dirname, './migrations/**/*.ts')],
-
-      subscribers: [
-        resolve(__dirname, 'subscriber/**/*.ts'),
-        resolve(__dirname, './../dist/subscriber/**/.js'),
-      ],
-
-      cli: {
-        entitiesDir: 'src',
-        migrationsDir: 'migrations',
-        subscribersDir: 'subscriber',
-      },
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      useClass: DatabaseConnectionService,
     }),
+    OrderModule,
+    ProductModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [UserController],
+  providers: [UserService],
 })
 export class AppModule {}
