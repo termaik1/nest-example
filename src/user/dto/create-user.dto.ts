@@ -5,15 +5,15 @@ export class CreateUserDto {
     required: true,
     type: 'string',
   })
-  name: string;
+  readonly name: string;
   @ApiProperty({
     required: true,
     type: 'string',
   })
-  email: string;
+  readonly email: string;
   @ApiProperty({
     required: true,
     type: 'string',
   })
-  password: string;
+  readonly password: string;
 }

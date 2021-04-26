@@ -7,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'user' })
 export class UserModel extends BaseEntity {
@@ -19,11 +20,12 @@ export class UserModel extends BaseEntity {
   name: string;
 
   @ApiProperty()
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @ApiProperty()
-  @Column()
+  // @Exclude()
+  @Column({ type: 'varchar', nullable: false })
   password: string;
 
   @ApiProperty()

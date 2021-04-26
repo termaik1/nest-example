@@ -19,22 +19,22 @@ enum Status {
 }
 
 @Entity({ name: 'order' })
-export class OrderModel {
+export class OrderModel extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => UserModel, user => user.id)
+  @OneToOne(() => UserModel, (user) => user.id)
   @JoinColumn()
   user: UserModel;
 
   // @OneToMany(() => ProductModel, product => product.id)
-  @OneToOne(() => ProductModel, product => product.id)
+  @OneToOne(() => ProductModel, (product) => product.id)
   @JoinColumn()
   product: ProductModel[];
 
   @Column({ type: 'enum', enum: Status, default: Status.WAITING })
   status: Status;
 
-  @Column({ type: 'timestamp', default: () => "CURRENT_TIMESTAMP" })
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createAt: Date;
 }
