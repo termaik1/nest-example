@@ -1,31 +1,38 @@
-import { CrudController } from '@nestjsx/crud';
-import { Crud } from '@nestjsx/crud';
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
-import {GetIdProductDto} from "./dto/get-id-product.dto"
-import { ProductModel } from './product.model';
+import { GetProductIdDto } from './dto/get-product-id.dto';
+
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('product')
+@UseGuards(JwtAuthGuard)
 @Controller('product')
-export class ProductController  {
+export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Get(":id")
-  public async getId(@Param('id') id: string) {
-    return this.productService.getProductId(id);
+  @Get(':id')
+  public async getId(@Param('id') product: GetProductIdDto) {
+    return this.productService.getProductId(product);
   }
 
-  @Post("")
+  @Post('')
   public async createProduct(@Body() product: CreateProductDto) {
-    return this.productService.createProduct(product)
+    return this.productService.createProduct(product);
   }
 
-  @Delete(":id")
+  @Delete(':id')
   public async deleteProduct(@Param('id') id: string) {
-    return this.productService.deleteProduct(id)
+    return this.productService.deleteProduct(id);
   }
-
 }

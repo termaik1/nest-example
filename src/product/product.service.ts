@@ -1,25 +1,28 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
-import { GetIdProductDto } from './dto/get-id-product.dto';
+import { GetProductIdDto } from './dto/get-product-id.dto';
 
 import { ProductModel } from './product.model';
 import { EntityRepository, Repository, getConnection } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 @EntityRepository(ProductModel)
 @Injectable()
-export class ProductService extends Repository<ProductModel> {
-  async getProductId(id: string): Promise<ProductModel> {
-    try {
-      const product = await getConnection()
-        .createQueryBuilder()
-        .select('product')
-        .from(ProductModel, 'product')
-        .where('product.id = :id', { id })
-        .getOne();
+export class ProductService {
+  constructor(
+    @InjectRepository(ProductModel)
+    private productRepository: Repository<ProductModel>,
+  ) {}
 
-      return product;
+  async getProductId(product: GetProductIdDto): Promise<ProductModel> {
+    try {
+      const productId = await this.productRepository.findOne(product);
+
+      if (productId) {
+        return productId;
+      }
+
+      throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
     } catch (err) {
       return err;
     }
@@ -27,14 +30,11 @@ export class ProductService extends Repository<ProductModel> {
 
   async createProduct(product: CreateProductDto): Promise<ProductModel> {
     try {
-      const productModel = new ProductModel();
-      for (const key in product) {
-        productModel[key] = product[key];
-      }
+      const newProduct = await this.productRepository.save(product);
 
-      await productModel.save();
+      await this.productRepository.save(newProduct);
 
-      return productModel;
+      return newProduct;
     } catch (err) {
       return err;
     }
@@ -53,7 +53,7 @@ export class ProductService extends Repository<ProductModel> {
         return id;
       }
 
-      throw new NotFoundException('Продукт отсуствует в базе');
+      throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
     } catch (err) {
       return err;
     }

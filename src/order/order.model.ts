@@ -25,12 +25,12 @@ export class OrderModel extends BaseEntity {
 
   @OneToOne(() => UserModel, (user) => user.id)
   @JoinColumn()
-  user: UserModel;
+  user: string;
 
   // @OneToMany(() => ProductModel, product => product.id)
   @OneToOne(() => ProductModel, (product) => product.id)
   @JoinColumn()
-  product: ProductModel[];
+  product: string;
 
   @Column({ type: 'enum', enum: Status, default: Status.WAITING })
   status: Status;
