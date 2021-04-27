@@ -21,4 +21,5 @@ export class ProductModel extends BaseEntity {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createAt: Date;
+  
 }

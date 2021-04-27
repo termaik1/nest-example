@@ -23,14 +23,13 @@ export class OrderModel extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => UserModel, (user) => user.id)
+  @OneToOne(() => UserModel)
   @JoinColumn()
-  user: string;
+  user: UserModel;
 
-  // @OneToMany(() => ProductModel, product => product.id)
-  @OneToOne(() => ProductModel, (product) => product.id)
+  @OneToOne(() => ProductModel)
   @JoinColumn()
-  product: string;
+  product: ProductModel;
 
   @Column({ type: 'enum', enum: Status, default: Status.WAITING })
   status: Status;
