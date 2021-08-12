@@ -11,3 +11,6 @@ typeorm migration:create -n name-migration
 
 создание контроллера
  nest g controller auth
+ 
+ 
+ Когда нибудь доделаю =)
